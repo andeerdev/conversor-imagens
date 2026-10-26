@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Conversor de Imagens · Desafio 12x12</title>
+  <meta name="description" content="Converta imagens para WebP, JPG ou PNG direto no navegador. Redimensione, ajuste a qualidade e baixe tudo em ZIP. Nada é enviado para servidor nenhum.">
+  <meta name="theme-color" content="#0a1416">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Conversor de Imagens · Desafio 12x12">
+  <meta property="og:description" content="Semana 01 do Desafio 12x12: converta imagens para WebP, JPG ou PNG no navegador, sem enviar nada para servidor nenhum.">
+  <meta property="og:url" content="https://andeerdev.github.io/conversor-imagens/">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232dd4bf'/%3E%3Ccircle cx='22' cy='10.5' r='3' fill='%23062320'/%3E%3Cpath d='M5 25l8-11 5 6.5 3-3.5 6 8z' fill='%23062320'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+  <header class="topo">
+    <div class="container topo__linha">
+      <span class="marca">
+        <svg class="marca__icone" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <rect width="32" height="32" rx="8" class="marca__fundo"/>
+          <circle cx="22" cy="10.5" r="3" class="marca__forma"/>
+          <path d="M5 25l8-11 5 6.5 3-3.5 6 8z" class="marca__forma"/>
+        </svg>
+        <span>Conversor de Imagens</span>
+      </span>
+      <a class="selo" href="https://andeerdev.github.io/desafio-12x12/" target="_blank" rel="noopener noreferrer">Semana 01 · Desafio 12x12</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="intro">
+      <h1>Converta imagens sem enviar nada para lugar nenhum.</h1>
+      <p>WebP, JPG ou PNG, com ajuste de qualidade e tamanho. Tudo acontece no seu navegador: as fotos não saem do seu computador.</p>
+    </section>
+
+    <noscript><p class="aviso">Este conversor precisa de JavaScript para funcionar.</p></noscript>
+
+    <div class="corpo">
+      <section class="trabalho" aria-label="Imagens">
+        <label class="soltar" for="file" id="drop">
+          <input type="file" id="file" accept="image/*,.heic,.heif" multiple>
+          <svg class="soltar__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 16V4m0 0L7 9m5-5l5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 15v3a2 2 0 002 2h12a2 2 0 002-2v-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="soltar__texto">Arraste imagens aqui ou <strong>escolha arquivos</strong></span>
+          <span class="soltar__dica">Também dá para colar com Ctrl+V · JPG, PNG, WebP, GIF, BMP, SVG, AVIF e HEIC</span>
+        </label>
+
+        <div class="resumo" id="summary" hidden>
+          <dl class="resumo__numeros">
+            <div><dt>Arquivos</dt><dd id="sum-count">0/0</dd></div>
+            <div><dt>Antes</dt><dd id="sum-before">–</dd></div>
+            <div><dt>Depois</dt><dd id="sum-after">–</dd></div>
+            <div><dt>Economia</dt><dd id="sum-saving">–</dd></div>
+          </dl>
+          <div class="resumo__acoes">
+            <button type="button" class="botao botao--sec" id="clear">Limpar</button>
+            <button type="button" class="botao" id="zip" disabled>Baixar tudo (.zip)</button>
+          </div>
+        </div>
+
+        <p class="vazio" id="empty">Nenhuma imagem ainda. Adicione algumas para ver o antes e depois de cada uma.</p>
+        <ul class="lista" id="list" aria-live="polite" aria-label="Arquivos"></ul>
+      </section>
+
+      <aside class="painel" aria-labelledby="painel-titulo">
+        <h2 id="painel-titulo">Saída</h2>
+
+        <fieldset class="grupo">
+          <legend>Formato</legend>
+          <div class="segmentos">
+            <label class="segmento"><input type="radio" name="fmt" value="image/webp" checked><span>WebP</span></label>
+            <label class="segmento"><input type="radio" name="fmt" value="image/jpeg"><span>JPG</span></label>
+            <label class="segmento"><input type="radio" name="fmt" value="image/png"><span>PNG</span></label>
+          </div>
+          <p class="nota" id="fmt-note"></p>
+        </fieldset>
+
+        <div class="grupo" id="quality-field">
+          <div class="rotulo-linha">
+            <label for="quality">Qualidade</label>
+            <output id="quality-out" for="quality">82</output>
+          </div>
+          <input type="range" id="quality" min="10" max="100" step="1" value="82">
+          <p class="nota">Entre 75 e 85 costuma ser o ponto bom entre tamanho e nitidez.</p>
+        </div>
+
+        <fieldset class="grupo">
+          <legend>Tamanho</legend>
+          <div class="segmentos">
+            <label class="segmento"><input type="radio" name="resize" value="original" checked><span>Original</span></label>
+            <label class="segmento"><input type="radio" name="resize" value="width"><span>Largura máx.</span></label>
+            <label class="segmento"><input type="radio" name="resize" value="percent"><span>%</span></label>
+          </div>
+          <div class="inline" id="width-field" hidden>
+            <input type="number" id="max-width" min="16" max="10000" step="1" value="1920" inputmode="numeric" aria-label="Largura máxima em pixels">
+            <span>px de largura, no máximo</span>
+          </div>
+          <div class="inline" id="percent-field" hidden>
+            <input type="number" id="percent" min="1" max="100" step="1" value="50" inputmode="numeric" aria-label="Porcentagem do tamanho original">
+            <span>% do tamanho original</span>
+          </div>
+          <p class="nota">A proporção é sempre mantida. Imagens menores que o limite não são ampliadas.</p>
+        </fieldset>
+
+        <div class="grupo field" id="bg-field" hidden>
+          <div class="inline">
+            <input type="color" id="bg" value="#ffffff" aria-label="Cor de fundo para transparência">
+            <label for="bg">Fundo para transparência</label>
+          </div>
+          <p class="nota">JPG não guarda transparência, então as áreas vazias recebem esta cor.</p>
+        </div>
+
+        <p class="privacidade">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M8 11V8a4 4 0 018 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span>As imagens convertidas também saem sem os metadados da câmera (local, modelo, data).</span>
+        </p>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="rodape">
+    <div class="container rodape__linha">
+      <span>Feito por Anderson Ferreira · Código aberto (MIT)</span>
+      <a href="https://github.com/andeerdev/conversor-imagens" target="_blank" rel="noopener noreferrer">Ver código no GitHub</a>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="./vendor/jszip.min.js" defer></script>
+  <script src="./assets/app.js" defer></script>
+</body>
+</html>

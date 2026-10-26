@@ -53,7 +53,8 @@ conversor-imagens/
 │   └── app.js                 # toda a lógica
 ├── vendor/
 │   ├── jszip.min.js           # JSZip 3.10.1
-│   └── heic2any.min.js        # heic2any 0.0.4, carregado sob demanda
+│   ├── heic2any.min.js        # heic2any 0.0.4, carregado sob demanda
+│   └── LICENSE-*.md           # licenças das bibliotecas
 └── .github/workflows/deploy.yml
 ```
 
@@ -61,4 +62,4 @@ conversor-imagens/
 
 [MIT](./LICENSE) © 2026 Anderson Ferreira.
 
-As bibliotecas em `vendor/` mantêm as próprias licenças: JSZip (MIT ou GPLv3, usado aqui sob MIT) e heic2any (MIT).
+As bibliotecas em `vendor/` mantêm as próprias licenças, copiadas ao lado delas: JSZip (MIT ou GPLv3, usado aqui sob MIT) e heic2any (MIT). O heic2any embute uma versão compilada do [libheif](https://github.com/strukturag/libheif), que é LGPL-3.0.
